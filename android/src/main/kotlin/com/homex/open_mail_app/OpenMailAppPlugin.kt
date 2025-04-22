@@ -7,47 +7,20 @@ import android.net.Uri
 import androidx.annotation.NonNull
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-import io.flutter.plugin.common.PluginRegistry.Registrar
 
 class OpenMailAppPlugin : FlutterPlugin, MethodCallHandler {
     private lateinit var channel: MethodChannel
     private lateinit var applicationContext: Context
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        // Although getFlutterEngine is deprecated we still need to use it for
-        // apps not updated to Flutter Android v2 embedding
-        channel = MethodChannel(flutterPluginBinding.flutterEngine.dartExecutor, "open_mail_app")
+        applicationContext = flutterPluginBinding.applicationContext
+        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "open_mail_app")
         channel.setMethodCallHandler(this)
-        init(flutterPluginBinding.applicationContext)
-    }
-
-    // This static function is optional and equivalent to onAttachedToEngine. It supports the old
-    // pre-Flutter-1.12 Android projects. You are encouraged to continue supporting
-    // plugin registration via this function while apps migrate to use the new Android APIs
-    // post-flutter-1.12 via https://flutter.dev/go/android-project-migration.
-    //
-    // It is encouraged to share logic between onAttachedToEngine and registerWith to keep
-    // them functionally equivalent. Only one of onAttachedToEngine or registerWith will be called
-    // depending on the user's project. onAttachedToEngine or registerWith must both be defined
-    // in the same class.
-    companion object {
-        @JvmStatic
-        fun registerWith(registrar: Registrar) {
-            val channel = MethodChannel(registrar.messenger(), "open_mail_app")
-            val plugin = OpenMailAppPlugin()
-            channel.setMethodCallHandler(plugin)
-            plugin.init(registrar.context())
-        }
-    }
-
-    fun init(context: Context) {
-        applicationContext = context
     }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
@@ -229,14 +202,14 @@ class OpenMailAppPlugin : FlutterPlugin, MethodCallHandler {
 }
 
 data class App(
-        @SerializedName("name") val name: String
+    @SerializedName("name") val name: String
 )
 
-data class EmailContent (
-
-        @SerializedName("to") val to: List<String>,
-        @SerializedName("cc") val cc: List<String>,
-        @SerializedName("bcc") val bcc: List<String>,
-        @SerializedName("subject") val subject: String,
-        @SerializedName("body") val body: String
+data class EmailContent(
+    @SerializedName("to") val to: List<String>,
+    @SerializedName("cc") val cc: List<String>,
+    @SerializedName("bcc") val bcc: List<String>,
+    @SerializedName("subject") val subject: String,
+    @SerializedName("body") val body: String
 )
+
