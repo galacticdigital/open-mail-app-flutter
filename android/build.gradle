@@ -2,7 +2,7 @@ group 'com.homex.open_mail_app'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.9.10'  // Make sure Kotlin version is up-to-date
+    ext.kotlin_version = '1.9.10'  // Ensure the Kotlin version is up-to-date
     repositories {
         google()
         mavenCentral()
@@ -42,13 +42,20 @@ android {
         abortOnError false
     }
 
+    // Use JVM toolchain to ensure both Java and Kotlin target JVM 1.8
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(8) // Force Java to use version 1.8
+        }
+    }
+
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8  // Set Java to target 1.8
-        targetCompatibility JavaVersion.VERSION_1_8  // Set Java to target 1.8
+        sourceCompatibility JavaVersion.VERSION_1_8  // Ensure Java uses 1.8
+        targetCompatibility JavaVersion.VERSION_1_8  // Ensure Java uses 1.8
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'  // Set Kotlin to target 1.8
+        jvmTarget = '1.8'  // Ensure Kotlin uses JVM 1.8
     }
 }
 
